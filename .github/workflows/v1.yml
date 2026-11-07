@@ -1,0 +1,19 @@
+# Variante V1: Commit-Pruefung, Build und Signatur laufen im zentralen Workflow
+# in secure-workflows. Dieses Repository vergibt nur die Berechtigungen, weil ein
+# aufgerufener Workflow nicht mehr Rechte haben kann als sein Aufrufer.
+name: v1
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  build:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    uses: lma-hh-01/secure-workflows/.github/workflows/v1.yml@main
