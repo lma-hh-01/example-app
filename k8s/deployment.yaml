@@ -18,12 +18,12 @@ spec:
       containers:
         - name: app
           # Wird beim Deployment durch die Versuchssteuerung gesetzt (testbed/scripts/deploy.sh).
-          image: zot:5000/example-app-v0:latest
+          image: zot.localhost:5000/example-app-v0:latest
           ports:
             - containerPort: 8080
           env:
             - name: DEPLOYED_IMAGE
-              value: zot:5000/example-app-v0:latest
+              value: zot.localhost:5000/example-app-v0:latest
             - name: POD_NAME
               valueFrom:
                 fieldRef:
