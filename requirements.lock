@@ -1,0 +1,8 @@
+# Abhaengigkeiten fuer Variante V3: dieselben Paketquellen wie requirements.txt,
+# aber jede Abhaengigkeit mit fester Version und Hash. pip installiert dann nur
+# genau diese Datei, egal welche Version eine andere Paketquelle anbietet.
+--index-url file:///packages/public
+--extra-index-url file:///packages/internal
+
+firma-utils==1.0.0 \
+    --hash=sha256:c01a7a40ef464baa761dbb3ee07aa797c7f677648203c699dba242d2653f427f

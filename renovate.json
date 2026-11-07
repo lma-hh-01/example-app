@@ -1,0 +1,13 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Renovate pflegt nur die gepinnten Abhaengigkeiten von Variante V3. V0 bis V2 bleiben absichtlich ungepinnt. Renovate-PRs werden nicht direkt gemergt, sondern signiert uebernommen (siehe README).",
+  "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
+  "includePaths": ["Dockerfile.v3", ".github/workflows/v3.yml", ".github/workflows/v3-rescan.yml"],
+  "packageRules": [
+    {
+      "description": "Den zentralen Workflow bewusst ueber @main aufrufen, Kyverno prueft dessen Identitaet samt Ref.",
+      "matchPackageNames": ["lma-hh-01/secure-workflows"],
+      "enabled": false
+    }
+  ]
+}

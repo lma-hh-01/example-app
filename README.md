@@ -7,7 +7,10 @@ Beispielanwendung des Testbeds zur Masterarbeit *Sicherheit in Software Supply C
 | `app/` | Webserver (nur Python-Standardbibliothek) |
 | `packages/` | interne und „öffentliche“ Paketquelle, siehe [packages/README.md](packages/README.md) |
 | `k8s/` | Kubernetes-Manifeste |
-| `.github/workflows/` | ein Workflow je Toolchain-Variante (`v0.yml` bis `v3.yml`) |
+| `.github/workflows/` | ein Workflow je Toolchain-Variante (`v0.yml` bis `v3.yml`), dazu `v3-rescan.yml` (tägliche Schwachstellenprüfung) |
+| `Dockerfile`, `requirements.txt` | Build für V0 bis V2, Basis-Image und Abhängigkeiten nicht gepinnt |
+| `Dockerfile.v3`, `requirements.lock` | Build für V3, Basis-Image per Digest und Abhängigkeiten mit Hash gepinnt |
+| `renovate.json` | Konfiguration für Renovate, das die Pins von V3 aktuell hält |
 
 Jeder Push auf `main` baut die Anwendung in allen Varianten. Die Images liegen unter `ghcr.io/lma-hh-01/example-app-<variante>`.
 
@@ -30,3 +33,17 @@ git config --local gpg.x509.program gitsign
 git config --local commit.gpgsign true
 git config --local gitsign.connectorID https://github.com/login/oauth
 ```
+
+## Renovate (ab Variante V3)
+
+Renovate hält die gepinnten Abhängigkeiten von V3 aktuell und öffnet dafür Pull Requests. Seine Commits sind nicht mit gitsign signiert und würden die Commit-Prüfung dauerhaft scheitern lassen. Ein Renovate-PR wird deshalb nicht gemergt, sondern seine Änderung wird signiert übernommen:
+
+```sh
+git fetch origin
+git switch -c renovate-uebernahme origin/main
+git cherry-pick --no-commit origin/<branch-des-renovate-prs>
+git commit -m "Renovate-Aenderung uebernehmen: <Titel des PRs>"
+git push -u origin renovate-uebernahme
+```
+
+Danach einen eigenen Pull Request öffnen und als Merge-Commit zusammenführen. Renovate erkennt, dass die Änderung auf `main` angekommen ist, und schließt seinen PR selbst.

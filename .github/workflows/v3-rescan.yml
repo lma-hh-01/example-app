@@ -1,0 +1,16 @@
+# Variante V3: taegliche Wiederholung des Schwachstellen-Gates fuer das zuletzt
+# gebaute Image, ueber den zentralen Workflow in secure-workflows.
+name: v3-rescan
+
+on:
+  schedule:
+    - cron: '17 5 * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  rescan:
+    permissions:
+      actions: read
+    uses: lma-hh-01/secure-workflows/.github/workflows/v3-rescan.yml@main
