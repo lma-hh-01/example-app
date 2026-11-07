@@ -1,0 +1,22 @@
+# Variante V3: wie V2, zusaetzlich Pruefung der Workflows (zizmor) und Manifeste
+# (Kyverno CLI), SBOM, Schwachstellen-Gate und gepinnte Abhaengigkeiten
+# (Dockerfile.v3, requirements.lock). Alles laeuft im zentralen Workflow in
+# secure-workflows, dieses Repository vergibt nur die Berechtigungen.
+name: v3
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  build:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+      artifact-metadata: write
+    uses: lma-hh-01/secure-workflows/.github/workflows/v3.yml@main

@@ -1,0 +1,24 @@
+# Build fuer Variante V3: wie Dockerfile, aber mit gepinntem Basis-Image (Digest)
+# und Abhaengigkeiten mit Hashes (requirements.lock). Renovate haelt den Digest aktuell.
+FROM python:3.14-slim@sha256:af8a5aa14780025dbfbcfbc81bd8a91ebd87711dd5b0f48ed71090949dd7cb1d
+
+ARG APP_VARIANT=unbekannt
+ARG APP_COMMIT=unbekannt
+ARG APP_BUILD_TIME=unbekannt
+
+WORKDIR /app
+
+COPY packages/ /packages/
+COPY requirements.lock .
+RUN pip install --no-cache-dir --disable-pip-version-check --root-user-action ignore --require-hashes -r requirements.lock
+
+COPY app/ .
+
+ENV APP_VARIANT=$APP_VARIANT \
+    APP_COMMIT=$APP_COMMIT \
+    APP_BUILD_TIME=$APP_BUILD_TIME \
+    PYTHONUNBUFFERED=1
+
+USER 10001
+EXPOSE 8080
+CMD ["python", "main.py"]
