@@ -1,0 +1,7 @@
+# Paketquellen: Der Standard-Index steht fuer die oeffentliche Quelle (wie PyPI),
+# der zusaetzliche Index fuer die interne Quelle der Firma. Beide liegen im Repo,
+# damit keine Angriffe gegen echte oeffentliche Registries noetig sind.
+--index-url file:///packages/public
+--extra-index-url file:///packages/internal
+
+firma-utils

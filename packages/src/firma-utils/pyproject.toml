@@ -1,0 +1,9 @@
+[project]
+name = "firma-utils"
+version = "1.0.0"
+description = "Internes Hilfspaket der Beispielfirma"
+requires-python = ">=3.12"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
