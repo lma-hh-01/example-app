@@ -1,0 +1,22 @@
+# Variante V2: Commit-Pruefung und Build, danach Signatur und Provenance in einem
+# eigenen Job, alles im zentralen Workflow in secure-workflows. Dieses Repository
+# vergibt nur die Berechtigungen, weil ein aufgerufener Workflow nicht mehr
+# Rechte haben kann als sein Aufrufer.
+name: v2
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  build:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+      artifact-metadata: write
+    uses: lma-hh-01/secure-workflows/.github/workflows/v2.yml@main
