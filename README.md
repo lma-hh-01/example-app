@@ -23,7 +23,7 @@ Ab V1 baut und signiert die Pipeline nur, wenn jeder neue Commit auf `main` entw
 - von einer erlaubten Person mit [gitsign](https://github.com/sigstore/gitsign) signiert ist (Anmeldung über GitHub im Browser) oder
 - ein Merge-Commit ist, den GitHub beim Zusammenführen eines Pull Requests erzeugt und selbst signiert.
 
-Änderungen kommen deshalb über Pull Requests auf `main`, zusammengeführt als Merge-Commit. Squash und Rebase sind abgeschaltet, weil dabei die Signaturen verloren gehen. Die Prüfung und die Liste der erlaubten Personen liegen im zentralen Workflow in [secure-workflows](https://github.com/lma-hh-01/secure-workflows), nicht in diesem Repository.
+Änderungen kommen deshalb über Pull Requests auf `main`, zusammengeführt als Merge-Commit. Squash und Rebase sind abgeschaltet, weil dabei die Signaturen verloren gehen. In V1 liegen die Prüfung und die Liste der erlaubten Signierer in diesem Repository (`.github/workflows/v1.yml`) und könnten hier entfernt werden. Ab V2 liegen sie im zentralen Workflow in [secure-workflows](https://github.com/lma-hh-01/secure-workflows), auf den dieses Repository keinen Zugriff hat.
 
 gitsign für dieses Repository einrichten:
 
