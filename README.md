@@ -36,14 +36,4 @@ git config --local gitsign.connectorID https://github.com/login/oauth
 
 ## Renovate (ab Variante V3)
 
-Renovate hält die gepinnten Abhängigkeiten von V3 aktuell und öffnet dafür Pull Requests. Seine Commits sind nicht mit gitsign signiert und würden die Commit-Prüfung dauerhaft scheitern lassen. Ein Renovate-PR wird deshalb nicht gemergt, sondern seine Änderung wird signiert übernommen:
-
-```sh
-git fetch origin
-git switch -c renovate-uebernahme origin/main
-git cherry-pick --no-commit origin/<branch-des-renovate-prs>
-git commit -m "Renovate-Aenderung uebernehmen: <Titel des PRs>"
-git push -u origin renovate-uebernahme
-```
-
-Danach einen eigenen Pull Request öffnen und als Merge-Commit zusammenführen. Renovate erkennt, dass die Änderung auf `main` angekommen ist, und schließt seinen PR selbst.
+Renovate hält die gepinnten Abhängigkeiten von V3 aktuell und öffnet dafür Pull Requests. Es läuft als Workflow in [secure-workflows](https://github.com/lma-hh-01/secure-workflows) und signiert seine Commits mit gitsign über die Identität dieses Workflows. Die Commit-Prüfung kennt diese Identität. Ein Renovate-PR wird deshalb wie jeder andere PR geprüft und als Merge-Commit zusammengeführt.
