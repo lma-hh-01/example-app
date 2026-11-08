@@ -1,6 +1,6 @@
 # example-app
 
-Beispielanwendung des Testbeds zur Masterarbeit *Sicherheit in Software Supply Chains*: eine kleine „Hallo Welt“-Webseite, die anzeigt, welcher Stand gerade läuft (Variante, Commit, Build-Zeit, Version des internen Pakets, Pod und Node).
+Beispielanwendung des Testbeds: eine kleine „Hallo Welt“-Webseite, die anzeigt, welcher Stand gerade läuft (Variante, Commit, Build-Zeit, Version des internen Pakets, Pod und Node).
 
 | Pfad | Inhalt |
 |---|---|
