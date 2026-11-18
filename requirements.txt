@@ -5,4 +5,3 @@
 --extra-index-url file:///packages/internal
 
 firma-utils
-werkzeug==0.15.2
