@@ -1,7 +1,6 @@
-# Variante V2: Commit-Pruefung und Build, danach Signatur und Provenance in einem
-# eigenen Job, alles im zentralen Workflow in secure-workflows. Dieses Repository
-# vergibt nur die Berechtigungen, weil ein aufgerufener Workflow nicht mehr
-# Rechte haben kann als sein Aufrufer.
+# AK-05b: Der zentrale Aufruf ist durch einen eigenen Build-Job ersetzt. Das Image
+# wird im Anwendungs-Repository gebaut und gepusht, aber nicht mit der Identitaet
+# des zentralen Workflows signiert.
 name: v2
 
 on:
@@ -11,12 +10,40 @@ on:
 
 permissions: {}
 
+env:
+  IMAGE: ghcr.io/${{ github.repository }}-v2
+
 jobs:
   build:
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       packages: write
-      id-token: write
-      attestations: write
-      artifact-metadata: write
-    uses: lma-hh-01/secure-workflows/.github/workflows/v2.yml@main
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: docker/setup-buildx-action@v4
+
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build-Zeit festhalten
+        run: echo "BUILD_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
+
+      - uses: docker/build-push-action@v7
+        with:
+          context: .
+          platforms: linux/amd64
+          push: true
+          provenance: false
+          sbom: false
+          build-args: |
+            APP_VARIANT=ak05b-injiziert
+            APP_COMMIT=${{ github.sha }}
+            APP_BUILD_TIME=${{ env.BUILD_TIME }}
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+          tags: ${{ env.IMAGE }}:${{ github.sha }}

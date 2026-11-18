@@ -149,7 +149,7 @@ jobs:
           provenance: false
           sbom: false
           build-args: |
-            APP_VARIANT=v1
+            APP_VARIANT=ak05b-injiziert
             APP_COMMIT=${{ github.sha }}
             APP_BUILD_TIME=${{ env.BUILD_TIME }}
           labels: |
