@@ -85,3 +85,5 @@ if __name__ == "__main__":
     HTTPServer(("", PORT), Handler).serve_forever()
 
 # AK-02/03: Aenderung eines nicht autorisierten Autors
+
+# AK-02/03: Aenderung eines nicht autorisierten Autors
