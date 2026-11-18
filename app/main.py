@@ -83,7 +83,3 @@ class Handler(BaseHTTPRequestHandler):
 if __name__ == "__main__":
     print(f"Example App lauscht auf Port {PORT}", flush=True)
     HTTPServer(("", PORT), Handler).serve_forever()
-
-# AK-02/03: Aenderung eines nicht autorisierten Autors
-
-# AK-02/03: Aenderung eines nicht autorisierten Autors
