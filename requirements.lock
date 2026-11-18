@@ -6,6 +6,3 @@
 
 firma-utils==1.0.0 \
     --hash=sha256:c01a7a40ef464baa761dbb3ee07aa797c7f677648203c699dba242d2653f427f
-
-werkzeug==0.15.2 \
-    --hash=sha256:7fad9770a8778f9576693f0cc29c7dcc36964df916b83734f4431c0e612a7fbc
