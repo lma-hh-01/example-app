@@ -1,9 +1,8 @@
-"""Beispielanwendung des Testbeds.
+"""Example application of the testbed.
 
-Zeigt an, welcher Stand gerade laeuft. Die Build-Angaben sind beim Bauen fest ins
-Image geschrieben, die Laufzeit-Angaben kommen aus Kubernetes. Weichen beide
-voneinander ab, ist das ein Hinweis darauf, dass ein anderes Image laeuft als
-gedacht.
+Shows which version is currently running. The build details are baked into the
+image at build time, the runtime details come from Kubernetes. If the two
+differ, this indicates that a different image is running than intended.
 """
 
 import html
@@ -11,25 +10,25 @@ import os
 import platform
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-import firma_utils
+import company_utils
 
 PORT = 8080
 
 
 def collect_info():
     return {
-        "Im Image eingebaut": {
-            "Variante": os.environ.get("APP_VARIANT", "unbekannt"),
-            "Commit": os.environ.get("APP_COMMIT", "unbekannt"),
-            "Build-Zeit": os.environ.get("APP_BUILD_TIME", "unbekannt"),
-            "firma-utils": f"{firma_utils.__version__} ({firma_utils.SOURCE})",
+        "Built into the image": {
+            "Variant": os.environ.get("APP_VARIANT", "unknown"),
+            "Commit": os.environ.get("APP_COMMIT", "unknown"),
+            "Build time": os.environ.get("APP_BUILD_TIME", "unknown"),
+            "company-utils": f"{company_utils.__version__} ({company_utils.SOURCE})",
         },
-        "Zur Laufzeit": {
-            "Deployte Image-Referenz": os.environ.get("DEPLOYED_IMAGE", "unbekannt"),
-            "Pod": os.environ.get("POD_NAME", "unbekannt"),
-            "Namespace": os.environ.get("POD_NAMESPACE", "unbekannt"),
-            "Node": os.environ.get("NODE_NAME", "unbekannt"),
-            "CPU-Architektur": platform.machine(),
+        "At runtime": {
+            "Deployed image reference": os.environ.get("DEPLOYED_IMAGE", "unknown"),
+            "Pod": os.environ.get("POD_NAME", "unknown"),
+            "Namespace": os.environ.get("POD_NAMESPACE", "unknown"),
+            "Node": os.environ.get("NODE_NAME", "unknown"),
+            "CPU architecture": platform.machine(),
         },
     }
 
@@ -44,7 +43,7 @@ def render_page(info):
         sections.append(f"<h2>{html.escape(title)}</h2><table>{cells}</table>")
 
     return f"""<!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <title>Example App</title>
@@ -55,7 +54,7 @@ def render_page(info):
 </style>
 </head>
 <body>
-<h1>Hallo Welt</h1>
+<h1>Hello World</h1>
 {"".join(sections)}
 </body>
 </html>
@@ -69,7 +68,7 @@ class Handler(BaseHTTPRequestHandler):
         elif self.path == "/":
             self.respond(200, "text/html; charset=utf-8", render_page(collect_info()))
         else:
-            self.respond(404, "text/plain", "nicht gefunden")
+            self.respond(404, "text/plain", "not found")
 
     def respond(self, status, content_type, body):
         data = body.encode("utf-8")
@@ -81,5 +80,5 @@ class Handler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    print(f"Example App lauscht auf Port {PORT}", flush=True)
+    print(f"Example App listening on port {PORT}", flush=True)
     HTTPServer(("", PORT), Handler).serve_forever()

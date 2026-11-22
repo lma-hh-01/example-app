@@ -10,5 +10,5 @@ spec:
   ports:
     - port: 8080
       targetPort: 8080
-      # kind leitet diesen Port auf http://localhost:8080 des Rechners weiter (testbed/config/kind.yaml).
+      # kind forwards this port to http://localhost:8080 on the host (testbed/config/kind.yaml).
       nodePort: 30080

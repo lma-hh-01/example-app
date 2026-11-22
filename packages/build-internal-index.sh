@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
-# Baut das interne Paket firma-utils neu und legt es im internen Paketindex ab.
-# Nur noetig, wenn sich packages/src/firma-utils aendert. Das Ergebnis wird committet,
-# damit der Build in der Pipeline ohne eigene Paket-Registry auskommt.
+# Rebuilds the internal package company-utils and stores it in the internal package index.
+# Only needed when packages/src/company-utils changes. The result is committed,
+# so that the build in the pipeline works without a package registry of its own.
 set -euo pipefail
 
 PACKAGES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-INDEX_DIR="$PACKAGES_DIR/internal/firma-utils"
+INDEX_DIR="$PACKAGES_DIR/internal/company-utils"
 PYTHON_IMAGE="docker.io/library/python:3.14-slim@sha256:af8a5aa14780025dbfbcfbc81bd8a91ebd87711dd5b0f48ed71090949dd7cb1d"
 
 rm -rf "$INDEX_DIR"
 mkdir -p "$INDEX_DIR"
 
 docker run --rm -v "$PACKAGES_DIR:/packages" -w /packages "$PYTHON_IMAGE" \
-  pip wheel --quiet --disable-pip-version-check --no-deps ./src/firma-utils -w ./internal/firma-utils
+  pip wheel --quiet --disable-pip-version-check --no-deps ./src/company-utils -w ./internal/company-utils
 
-# pip erwartet je Paket eine index.html mit Links auf die Dateien (Simple Repository API).
+# pip expects one index.html per package with links to the files (Simple Repository API).
 {
   echo "<!DOCTYPE html>"
   echo "<html><body>"
@@ -25,4 +25,4 @@ docker run --rm -v "$PACKAGES_DIR:/packages" -w /packages "$PYTHON_IMAGE" \
   echo "</body></html>"
 } > "$INDEX_DIR/index.html"
 
-echo "Interner Index aktualisiert: $INDEX_DIR"
+echo "Internal index updated: $INDEX_DIR"

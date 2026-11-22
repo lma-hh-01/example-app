@@ -1,10 +1,10 @@
-# Build fuer Variante V3: wie Dockerfile, aber mit gepinntem Basis-Image (Digest)
-# und Abhaengigkeiten mit Hashes (requirements.lock). Renovate haelt den Digest aktuell.
+# Build for variant V3: like Dockerfile, but with a pinned base image (digest)
+# and dependencies with hashes (requirements.lock). Renovate keeps the digest up to date.
 FROM python:3.14-slim@sha256:9aaa474097d094040649f2162a627c0049b408f52138d980916788d80f04802f
 
-ARG APP_VARIANT=unbekannt
-ARG APP_COMMIT=unbekannt
-ARG APP_BUILD_TIME=unbekannt
+ARG APP_VARIANT=unknown
+ARG APP_COMMIT=unknown
+ARG APP_BUILD_TIME=unknown
 
 WORKDIR /app
 

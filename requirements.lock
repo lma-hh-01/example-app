@@ -1,8 +1,8 @@
-# Abhaengigkeiten fuer Variante V3: dieselben Paketquellen wie requirements.txt,
-# aber jede Abhaengigkeit mit fester Version und Hash. pip installiert dann nur
-# genau diese Datei, egal welche Version eine andere Paketquelle anbietet.
+# Dependencies for variant V3: the same package indexes as requirements.txt,
+# but every dependency with a fixed version and hash. pip then installs exactly
+# this file, no matter which version another package index offers.
 --index-url file:///packages/public
 --extra-index-url file:///packages/internal
 
-firma-utils==1.0.0 \
-    --hash=sha256:c01a7a40ef464baa761dbb3ee07aa797c7f677648203c699dba242d2653f427f
+company-utils==1.0.0 \
+    --hash=sha256:2e14d5e2095e76f369e7c16eef9617b2c79a14924bfa16073fef6955fbb3107b

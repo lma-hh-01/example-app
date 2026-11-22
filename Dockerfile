@@ -1,8 +1,8 @@
 FROM python:3.14-slim
 
-ARG APP_VARIANT=unbekannt
-ARG APP_COMMIT=unbekannt
-ARG APP_BUILD_TIME=unbekannt
+ARG APP_VARIANT=unknown
+ARG APP_COMMIT=unknown
+ARG APP_BUILD_TIME=unknown
 
 WORKDIR /app
 

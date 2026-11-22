@@ -1,4 +1,4 @@
-# Beim Bauen des internen Pakets entstehende Dateien
+# Files created when building the internal package
 build/
 *.egg-info/
 __pycache__/

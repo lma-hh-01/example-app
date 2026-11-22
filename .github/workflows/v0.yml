@@ -1,6 +1,6 @@
-# Variante V0 (Basislinie): Build ohne Supply-Chain-Haertung.
-# Actions nur ueber ihr Major-Tag referenziert, Image per Tag "latest" verteilt,
-# keine Signatur, keine Provenance, kein SBOM, kein Scan.
+# Variant V0 (baseline): build without supply chain hardening.
+# Actions referenced only by their major tag, image distributed via the tag
+# "latest", no signature, no provenance, no SBOM, no scan.
 name: v0
 
 on:
@@ -29,7 +29,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build-Zeit festhalten
+      - name: Record build time
         run: echo "BUILD_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
 
       - uses: docker/build-push-action@v7
@@ -37,7 +37,7 @@ jobs:
           context: .
           platforms: linux/amd64
           push: true
-          # Ohne diese beiden Schalter legt BuildKit einen Index mit eigener Attestierung an.
+          # Without these two switches BuildKit creates an index with its own attestation.
           provenance: false
           sbom: false
           build-args: |
