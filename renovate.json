@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "description": "Renovate pflegt nur die gepinnten Abhaengigkeiten von Variante V3. V0 bis V2 bleiben absichtlich ungepinnt. Renovate laeuft als Workflow in secure-workflows und signiert seine Commits selbst.",
+  "description": "Renovate only maintains the pinned dependencies of variant V3. V0 to V2 deliberately stay unpinned. Renovate runs as a workflow in secure-workflows and signs its commits itself.",
   "extends": [
     "config:recommended",
     "helpers:pinGitHubActionDigests"
@@ -12,14 +12,14 @@
   ],
   "packageRules": [
     {
-      "description": "Den zentralen Workflow bewusst ueber @main aufrufen, Kyverno prueft dessen Identitaet samt Ref.",
+      "description": "Deliberately call the central workflow via @main, Kyverno checks its identity including the ref.",
       "matchPackageNames": [
         "lma-hh-01/secure-workflows"
       ],
       "enabled": false
     },
     {
-      "description": "Das Basis-Image nur per Digest aktualisieren. Die Python-Version bleibt wie in V0 bis V2, damit die Varianten vergleichbar bleiben.",
+      "description": "Only update the base image by digest. The Python version stays as in V0 to V2 so that the variants remain comparable.",
       "matchDepNames": [
         "python"
       ],

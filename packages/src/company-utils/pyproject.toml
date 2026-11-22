@@ -1,7 +1,7 @@
 [project]
-name = "firma-utils"
+name = "company-utils"
 version = "1.0.0"
-description = "Internes Hilfspaket der Beispielfirma"
+description = "Internal helper package of the example company"
 requires-python = ">=3.12"
 
 [build-system]

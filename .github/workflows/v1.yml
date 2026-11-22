@@ -1,7 +1,7 @@
-# Variante V1: Commit-Pruefung, Build und Cosign-Signatur in einem Job, direkt
-# in diesem Repository. Die Signatur traegt die Identitaet dieses Workflows.
-# Weil der Workflow hier liegt, kann jeder mit Schreibrecht die Pruefung
-# entfernen. Erst V2 verlagert sie in den zentralen Workflow in secure-workflows.
+# Variant V1: commit verification, build and Cosign signature in one job,
+# directly in this repository. The signature carries the identity of this
+# workflow. Because the workflow lives here, anyone with write access can remove
+# the verification. Only V2 moves it into the central workflow in secure-workflows.
 name: v1
 
 on:
@@ -18,16 +18,16 @@ defaults:
 env:
   IMAGE: ghcr.io/${{ github.repository }}-v1
   GITSIGN_VERSION: 0.18.0
-  # Wer Commits signieren darf (gitsign). Eine Zeile je Signierer: E-Mail-Adresse im
-  # Commit, erwartete Identitaet im Zertifikat, Aussteller der Identitaet.
-  # Personen melden sich ueber GitHub an, Renovate signiert ueber seinen Workflow.
+  # Who may sign commits (gitsign). One line per signer: email address in the
+  # commit, expected identity in the certificate, issuer of the identity.
+  # People log in via GitHub, Renovate signs via its workflow.
   ALLOWED_SIGNERS: |
     lma-hh-01@mailbox.org lma-hh-01@mailbox.org https://github.com/login/oauth
     354102089+lma-hh-01-testbed-renovate[bot]@users.noreply.github.com https://github.com/${{ github.repository_owner }}/secure-workflows/.github/workflows/renovate.yml@refs/heads/main https://token.actions.githubusercontent.com
-  # Letzter Commit vor Einfuehrung der Commit-Signaturen. Geprueft werden nur die
-  # Commits danach. In V1 liegt der Anker im Anwendungs-Repository selbst.
+  # Last commit before commit signatures were introduced. Only the commits after
+  # it are verified. In V1 the anchor lives in the application repository itself.
   TRUST_ANCHOR: 469390f0f078d28ba83f7c69c3ee23cbc627d04e
-  # Schluessel, mit dem GitHub die Merge-Commits von Pull Requests signiert
+  # Key that GitHub uses to sign the merge commits of pull requests
   # (https://github.com/web-flow.gpg).
   WEB_FLOW_FINGERPRINT: 968479A1AFF927E37D1A566BB5690EEEBB952194
 
@@ -39,11 +39,11 @@ jobs:
       packages: write
       id-token: write
     steps:
-      - name: Nur main bauen
+      - name: Build main only
         run: |
-          # Die Commit-Pruefung ist fuer die Historie von main festgelegt.
+          # The commit verification is defined for the history of main.
           if [ "$GITHUB_REF" != "refs/heads/main" ]; then
-            echo "::error::Gebaut und signiert wird nur main, nicht $GITHUB_REF."
+            echo "::error::Only main is built and signed, not $GITHUB_REF."
             exit 1
           fi
 
@@ -53,7 +53,7 @@ jobs:
 
       - uses: sigstore/cosign-installer@v4.1.3
 
-      - name: gitsign installieren und dessen Signatur pruefen
+      - name: Install gitsign and verify its signature
         run: |
           binary="gitsign_${GITSIGN_VERSION}_linux_amd64"
           release="https://github.com/sigstore/gitsign/releases/download/v${GITSIGN_VERSION}"
@@ -65,14 +65,14 @@ jobs:
             "$binary"
           sudo install "$binary" /usr/local/bin/gitsign
 
-      - name: Commit-Signaturen pruefen
+      - name: Verify commit signatures
         run: |
-          # Merge-Commits auf der Hauptlinie von main erzeugt GitHub beim Zusammenfuehren
-          # eines Pull Requests und signiert sie selbst. Alle anderen Commits muss eine
-          # erlaubte Person mit gitsign signiert haben.
+          # GitHub creates the merge commits on the first-parent line of main when
+          # merging a pull request and signs them itself. Every other commit must be
+          # signed with gitsign by an allowed person.
           curl -fsSL https://github.com/web-flow.gpg | gpg --quiet --import
 
-          # Gibt "<identitaet> <aussteller>" fuer eine erlaubte E-Mail-Adresse aus, sonst nichts.
+          # Prints "<identity> <issuer>" for an allowed email address, otherwise nothing.
           signer_of() {
             awk -v email="$1" '$1 == email { print $2, $3 }' <<<"$ALLOWED_SIGNERS"
           }
@@ -84,8 +84,8 @@ jobs:
           }
 
           verify_merge_commit() {
-            # Nur der Fingerabdruck stellt sicher, dass GitHub signiert hat und nicht
-            # irgendein gueltiger Schluessel.
+            # Only the fingerprint ensures that GitHub signed the commit and not
+            # just any valid key.
             git verify-commit --raw "$1" 2>&1 | grep "VALIDSIG $WEB_FLOW_FINGERPRINT " >/dev/null
           }
 
@@ -97,21 +97,21 @@ jobs:
             [ -n "$(signer_of "$author")" ] || return 1
             read -r identity issuer <<<"$(signer_of "$committer")"
             [ -n "$identity" ] || return 1
-            # gitsign prueft nur das Zertifikat gegen die angegebene Identitaet.
-            # Dass diese zum Committer passt, stellt die Zuordnung oben sicher.
+            # gitsign only checks the certificate against the given identity.
+            # The mapping above ensures that this identity belongs to the committer.
             gitsign verify --certificate-identity "$identity" \
               --certificate-oidc-issuer "$issuer" "$commit" >/dev/null 2>&1
           }
 
           if ! git merge-base --is-ancestor "$TRUST_ANCHOR" HEAD; then
-            echo "::error::Der Vertrauensanker $TRUST_ANCHOR ist nicht in der Historie enthalten."
+            echo "::error::The trust anchor $TRUST_ANCHOR is not part of the history."
             exit 1
           fi
 
           failed=0
           for commit in $(git rev-list "$TRUST_ANCHOR..HEAD"); do
             if is_merge_on_main_line "$commit"; then
-              kind="Merge-Commit von GitHub"
+              kind="GitHub merge commit"
               verify_merge_commit "$commit" && result=ok || result=failed
             else
               kind="gitsign"
@@ -122,7 +122,7 @@ jobs:
             if [ "$result" = ok ]; then
               echo "OK      ($kind) $summary"
             else
-              echo "::error::Signatur ungueltig oder nicht erlaubt ($kind): $summary"
+              echo "::error::Signature invalid or not allowed ($kind): $summary"
               failed=1
             fi
           done
@@ -136,7 +136,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build-Zeit festhalten
+      - name: Record build time
         run: echo "BUILD_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
 
       - id: push
@@ -145,7 +145,7 @@ jobs:
           context: .
           platforms: linux/amd64
           push: true
-          # Ohne diese beiden Schalter legt BuildKit einen Index mit eigener Attestierung an.
+          # Without these two switches BuildKit creates an index with its own attestation.
           provenance: false
           sbom: false
           build-args: |
@@ -156,5 +156,5 @@ jobs:
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
           tags: ${{ env.IMAGE }}:${{ github.sha }}
 
-      - name: Image signieren
+      - name: Sign image
         run: cosign sign --yes "$IMAGE@${{ steps.push.outputs.digest }}"

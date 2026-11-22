@@ -1,7 +1,7 @@
-# Variante V3: wie V2, zusaetzlich Pruefung der Workflows (zizmor) und Manifeste
-# (Kyverno CLI), SBOM, Schwachstellen-Gate und gepinnte Abhaengigkeiten
-# (Dockerfile.v3, requirements.lock). Alles laeuft im zentralen Workflow in
-# secure-workflows, dieses Repository vergibt nur die Berechtigungen.
+# Variant V3: like V2, plus checks of the workflows (zizmor) and manifests
+# (Kyverno CLI), SBOM, vulnerability gate and pinned dependencies
+# (Dockerfile.v3, requirements.lock). Everything runs in the central workflow in
+# secure-workflows, this repository only grants the permissions.
 name: v3
 
 on:

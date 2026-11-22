@@ -1,5 +1,5 @@
-# Variante V3: taegliche Wiederholung des Schwachstellen-Gates fuer das zuletzt
-# gebaute Image, ueber den zentralen Workflow in secure-workflows.
+# Variant V3: daily repetition of the vulnerability gate for the most recently
+# built image, via the central workflow in secure-workflows.
 name: v3-rescan
 
 on:
